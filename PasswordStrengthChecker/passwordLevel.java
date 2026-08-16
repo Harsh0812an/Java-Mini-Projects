@@ -1,88 +1,79 @@
-import java.util.*;
+//PROJECT TO DETERMINE THE LEVEL OF ENTERED PASSWORD AND SUGGEST 
+import java.util.Scanner;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
-
-import java.io.*;
-
-class MusicPlayer
+class passwordLevel
 {
-    public static void main(String args[])
+    public static void main(String args[])  
     {
-        String filePath =
-            "C:\\Users\\harsh\\OneDrive\\Documents\\Productive Shit\\Made In Japan(1).wav";
-
-        File file = new File(filePath);
-
-        try (
-            Scanner sc = new Scanner(System.in);
-            AudioInputStream audioStream =
-                AudioSystem.getAudioInputStream(file);
-        )
+        Scanner sc = new Scanner(System.in);
+        String pass;
+        System.out.println("Enter your password");
+        pass = sc.nextLine();
+        int length = pass.length();
+        boolean hasDigit = false;
+        boolean hasLower = false;
+        boolean hasUpper = false;
+        boolean hasSpecial = false;
+        for(int i = 0; i < length; i++)
         {
-            Clip clip = AudioSystem.getClip();
-            clip.open(audioStream);
+            char ch = pass.charAt(i);
 
-            String response = "";
+            if(Character.isDigit(ch))
+                hasDigit = true;
+            else if(Character.isLowerCase(ch))
+                hasLower = true;
+            else if(Character.isUpperCase(ch))
+                hasUpper = true;
+            else
+                hasSpecial = true;
+        }
+        int score = 0;
+        if(length >= 8) score=score+1;
+        if(hasDigit) score=score+1;
+        if(hasLower) score=score+1;
+        if(hasUpper) score=score+1;
+        if(hasSpecial) score=score+1;
+        int category;
 
-            while(!response.equals("Q"))
+        if(score == 5)
+        {
+            category = 1;
+            System.out.println("Password is strong");
+        }
+        else if(score >= 3)
+        {
+            category = 2;
+            System.out.println("Password is medium");
+        }
+        else
+        {
+            category = 3;
+            System.out.println("Password is weak");
+        }
+
+        if(category == 1)
+        {
+            System.out.println("No change needed in password");
+        }
+        else
+        {
+            String user;
+            System.out.println("Enter user name");
+            user = sc.nextLine();
+            System.out.println("enter number of character needed");
+            int c=sc.nextInt();
+            String cha="";
+            char arr[] = {'a','b','c','d','e','f'};
+            String result = "";
+            for(int i = 0; i < c; i++)
             {
-                System.out.println("\nP = Play");
-                System.out.println("S = Stop");
-                System.out.println("R = Reset");
-                System.out.println("Q = Quit");
-                System.out.print("Enter your response: ");
-
-                response = sc.next().toUpperCase();
-
-                switch(response)
-                {
-                    case "P" ->
-                    {
-                        clip.start();
-                    }
-
-                    case "S" ->
-                    {
-                        clip.stop();
-                    }
-
-                    case "R" ->
-                    {
-                        clip.stop();
-                        clip.setMicrosecondPosition(0);
-                    }
-
-                    case "Q" ->
-                    {
-                        clip.close();
-                    }
-
-                    default ->
-                    {
-                        System.out.println("Invalid choice");
-                    }
-                }
+                int index = (int)(Math.random() * arr.length);
+                result = result + arr[index];   
             }
+            String newPass = user + (int)(Math.random()*1000) + result+ "@#";
+            System.out.println("Suggested password is:");
+            System.out.println(newPass);
         }
-        catch(UnsupportedAudioFileException e)
-        {
-            System.out.println("Unsupported audio file format");
-        }
-        catch(LineUnavailableException e)
-        {
-            System.out.println("Unable to access audio resource");
-        }
-        catch(IOException e)
-        {
-            System.out.println("Could not locate or read file");
-        }
-        finally
-        {
-            System.out.println("Bye");
-        }
+        sc.close();
     }
 }
